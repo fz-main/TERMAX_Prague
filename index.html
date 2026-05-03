@@ -3,704 +3,2016 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TERMAX | Praha</title>
+<title>TERMAX — Night Club Prague</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
 
   :root {
-    --primary: #ff6b35;
-    --secondary: #f7c59f;
-    --dark: #0a0a0a;
-    --darker: #050505;
-    --accent: #ff3366;
-    --gold: #ffd700;
-    --blue: #00d4ff;
-    --purple: #8b5cf6;
-    --text: #ffffff;
-    --text-muted: #a0a0a0;
-    --card-bg: rgba(255,255,255,0.03);
-    --border: rgba(255,107,53,0.2);
+    --neon-pink: #ff006e;
+    --neon-purple: #8338ec;
+    --neon-cyan: #00f5ff;
+    --neon-gold: #ffd60a;
+    --dark-bg: #050508;
+    --dark-card: #0d0d1a;
+    --dark-card2: #0a0a15;
+    --glass: rgba(255,255,255,0.04);
+    --glass-border: rgba(255,255,255,0.08);
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin:0; padding:0; box-sizing:border-box; }
 
   html { scroll-behavior: smooth; }
 
   body {
-    font-family: 'Inter', sans-serif;
-    background: var(--darker);
-    color: var(--text);
+    background: var(--dark-bg);
+    color: #fff;
+    font-family: 'Rajdhani', sans-serif;
     overflow-x: hidden;
   }
 
-  /* ========== PRELOADER ========== */
-  #preloader {
+  /* ========== LOADER ========== */
+  #loader {
     position: fixed;
     inset: 0;
     background: #000;
     z-index: 9999;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
     transition: opacity 0.8s ease, visibility 0.8s ease;
   }
+  #loader.hide { opacity:0; visibility:hidden; }
 
-  #preloader.hide {
-    opacity: 0;
-    visibility: hidden;
-  }
-
-  .preloader-logo {
-    font-family: 'Orbitron', monospace;
-    font-size: clamp(2rem, 6vw, 4rem);
+  .loader-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(2.5rem, 8vw, 6rem);
     font-weight: 900;
-    background: linear-gradient(135deg, #ff6b35, #ff3366, #8b5cf6, #00d4ff);
-    background-size: 300% 300%;
+    letter-spacing: 0.3em;
+    background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple), var(--neon-cyan));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: gradientShift 2s ease infinite;
-    letter-spacing: 0.3em;
+    animation: glitch 1.5s infinite, pulse-glow 2s ease-in-out infinite;
+    position: relative;
   }
 
-  .preloader-bar-wrap {
-    margin-top: 2rem;
-    width: 200px;
+  .loader-logo::before,
+  .loader-logo::after {
+    content: 'TERMAX';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .loader-logo::before {
+    animation: glitch-1 1.5s infinite;
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+  }
+  .loader-logo::after {
+    animation: glitch-2 1.5s infinite;
+    clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+  }
+
+  @keyframes glitch-1 {
+    0%,95%,100% { transform: translate(0); }
+    96% { transform: translate(-4px, 2px); }
+    97% { transform: translate(4px, -2px); }
+    98% { transform: translate(-2px, 0); }
+    99% { transform: translate(2px, 1px); }
+  }
+  @keyframes glitch-2 {
+    0%,95%,100% { transform: translate(0); }
+    96% { transform: translate(4px, -2px); }
+    97% { transform: translate(-4px, 2px); }
+    98% { transform: translate(2px, 0); }
+    99% { transform: translate(-2px, -1px); }
+  }
+  @keyframes pulse-glow {
+    0%,100% { filter: drop-shadow(0 0 20px var(--neon-pink)) drop-shadow(0 0 60px var(--neon-purple)); }
+    50% { filter: drop-shadow(0 0 40px var(--neon-cyan)) drop-shadow(0 0 100px var(--neon-pink)); }
+  }
+
+  .loader-bar {
+    width: 280px;
     height: 3px;
     background: rgba(255,255,255,0.1);
-    border-radius: 2px;
+    border-radius: 99px;
+    margin-top: 40px;
     overflow: hidden;
+    position: relative;
   }
-
-  .preloader-bar {
+  .loader-bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, #ff6b35, #ff3366, #00d4ff);
-    border-radius: 2px;
-    animation: loadBar 2s ease forwards;
+    width: 0%;
+    background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple), var(--neon-cyan));
+    border-radius: 99px;
+    animation: loadbar 2s ease forwards;
+    box-shadow: 0 0 20px var(--neon-cyan);
+  }
+  @keyframes loadbar {
+    0% { width:0%; }
+    100% { width:100%; }
   }
 
-  @keyframes loadBar {
-    0% { width: 0; }
-    100% { width: 100%; }
-  }
-
-  .preloader-particles {
+  .loader-particles {
     position: absolute;
     inset: 0;
     overflow: hidden;
   }
-
-  .preloader-particle {
+  .lp {
     position: absolute;
-    width: 4px;
-    height: 4px;
+    width: 2px;
+    height: 2px;
+    background: var(--neon-cyan);
     border-radius: 50%;
-    animation: floatParticle linear infinite;
+    animation: lp-float linear infinite;
+    opacity: 0;
   }
-
-  @keyframes floatParticle {
-    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
+  @keyframes lp-float {
+    0% { transform: translateY(100vh) translateX(0); opacity:0; }
+    10% { opacity:1; }
+    90% { opacity:1; }
+    100% { transform: translateY(-20px) translateX(30px); opacity:0; }
   }
 
   /* ========== CANVAS BACKGROUND ========== */
-  #bgCanvas {
+  #bg-canvas {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    inset: 0;
     z-index: 0;
     pointer-events: none;
-  }
-
-  /* ========== CURSOR ========== */
-  .cursor {
-    position: fixed;
-    width: 20px; height: 20px;
-    background: rgba(255,107,53,0.8);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9998;
-    transform: translate(-50%, -50%);
-    transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
-    mix-blend-mode: difference;
-  }
-
-  .cursor-follower {
-    position: fixed;
-    width: 40px; height: 40px;
-    border: 1px solid rgba(255,107,53,0.4);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9997;
-    transform: translate(-50%, -50%);
-    transition: all 0.15s ease;
-  }
-
-  .cursor.hovered { width: 50px; height: 50px; background: rgba(255,51,102,0.6); }
-
-  @media (max-width: 768px) {
-    .cursor, .cursor-follower { display: none; }
   }
 
   /* ========== NAVBAR ========== */
   nav {
     position: fixed;
-    top: 0; left: 0; right: 0;
+    top: 0;
+    width: 100%;
     z-index: 1000;
-    padding: 1rem 3rem;
+    padding: 0 5%;
+    height: 70px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(5,5,5,0);
-    backdrop-filter: blur(0px);
-    transition: all 0.5s ease;
-    border-bottom: 1px solid transparent;
-  }
-
-  nav.scrolled {
-    background: rgba(5,5,5,0.9);
+    background: rgba(5,5,8,0.6);
     backdrop-filter: blur(20px);
-    border-bottom-color: var(--border);
-    padding: 0.7rem 3rem;
+    border-bottom: 1px solid var(--glass-border);
+    transition: all 0.3s ease;
+  }
+  nav.scrolled {
+    background: rgba(5,5,8,0.95);
+    box-shadow: 0 0 30px rgba(131,56,236,0.2);
   }
 
   .nav-logo {
-    font-family: 'Orbitron', monospace;
-    font-size: 1.5rem;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.6rem;
     font-weight: 900;
-    background: linear-gradient(135deg, #ff6b35, #ff3366);
+    letter-spacing: 0.2em;
+    background: linear-gradient(135deg, var(--neon-pink), var(--neon-cyan));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    letter-spacing: 0.2em;
     text-decoration: none;
-    animation: logoPulse 3s ease infinite;
+    filter: drop-shadow(0 0 10px var(--neon-pink));
+    transition: filter 0.3s;
   }
-
-  @keyframes logoPulse {
-    0%, 100% { filter: drop-shadow(0 0 5px rgba(255,107,53,0.3)); }
-    50% { filter: drop-shadow(0 0 15px rgba(255,107,53,0.8)); }
-  }
+  .nav-logo:hover { filter: drop-shadow(0 0 20px var(--neon-cyan)); }
 
   .nav-links {
     display: flex;
-    gap: 2rem;
+    gap: 2.5rem;
     list-style: none;
     align-items: center;
   }
-
   .nav-links a {
-    color: var(--text-muted);
+    color: rgba(255,255,255,0.7);
     text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 500;
+    font-size: 0.9rem;
+    font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    transition: color 0.3s ease;
     position: relative;
+    transition: color 0.3s;
   }
-
   .nav-links a::after {
     content: '';
     position: absolute;
-    bottom: -4px; left: 0;
-    width: 0; height: 1px;
-    background: var(--primary);
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--neon-pink), var(--neon-cyan));
     transition: width 0.3s ease;
+    box-shadow: 0 0 8px var(--neon-cyan);
   }
-
-  .nav-links a:hover { color: var(--primary); }
+  .nav-links a:hover { color: #fff; }
   .nav-links a:hover::after { width: 100%; }
 
-  /* Language Switcher */
   .lang-switcher {
     display: flex;
-    gap: 0.4rem;
-    align-items: center;
+    gap: 0.5rem;
   }
-
   .lang-btn {
-    padding: 0.3rem 0.6rem;
-    border: 1px solid rgba(255,107,53,0.3);
-    background: transparent;
-    color: var(--text-muted);
-    border-radius: 4px;
-    cursor: pointer;
+    background: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.5);
+    padding: 4px 10px;
+    font-family: 'Rajdhani', sans-serif;
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.05em;
-    transition: all 0.3s ease;
-    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s;
+    text-transform: uppercase;
+  }
+  .lang-btn.active,
+  .lang-btn:hover {
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+    box-shadow: 0 0 10px rgba(0,245,255,0.3);
   }
 
-  .lang-btn.active, .lang-btn:hover {
-    background: var(--primary);
-    border-color: var(--primary);
-    color: #fff;
-  }
-
-  /* Hamburger */
-  .hamburger {
+  .burger {
     display: none;
     flex-direction: column;
     gap: 5px;
     cursor: pointer;
-    z-index: 1001;
+    padding: 5px;
   }
-
-  .hamburger span {
-    width: 25px; height: 2px;
-    background: var(--primary);
-    transition: all 0.3s ease;
+  .burger span {
+    width: 24px;
+    height: 2px;
+    background: var(--neon-cyan);
     border-radius: 2px;
+    transition: all 0.3s;
+    display: block;
   }
 
-  .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-  .hamburger.open span:nth-child(2) { opacity: 0; }
-  .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
-
-  /* Mobile menu */
   .mobile-menu {
+    display: none;
     position: fixed;
-    inset: 0;
-    background: rgba(5,5,5,0.97);
-    backdrop-filter: blur(20px);
+    inset: 70px 0 0;
+    background: rgba(5,5,8,0.97);
+    backdrop-filter: blur(30px);
     z-index: 999;
-    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2rem;
-    transform: translateX(100%);
-    transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+    gap: 2.5rem;
   }
-
-  .mobile-menu.open { transform: translateX(0); }
-
+  .mobile-menu.open { display: flex; }
   .mobile-menu a {
-    color: var(--text);
+    color: #fff;
     text-decoration: none;
-    font-size: 1.5rem;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    transition: color 0.3s;
-  }
-
-  .mobile-menu a:hover { color: var(--primary); }
-
-  /* ========== SECTIONS COMMON ========== */
-  section {
-    position: relative;
-    z-index: 1;
-  }
-
-  .container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 2rem;
-  }
-
-  .section-tag {
-    display: inline-block;
-    padding: 0.3rem 1rem;
-    border: 1px solid var(--primary);
-    border-radius: 20px;
-    color: var(--primary);
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 1.8rem;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    margin-bottom: 1rem;
-    animation: tagPulse 2s ease infinite;
-  }
-
-  @keyframes tagPulse {
-    0%, 100% { box-shadow: 0 0 5px rgba(255,107,53,0.2); }
-    50% { box-shadow: 0 0 15px rgba(255,107,53,0.5); }
-  }
-
-  .section-title {
-    font-family: 'Orbitron', monospace;
-    font-size: clamp(1.8rem, 4vw, 3rem);
-    font-weight: 900;
-    line-height: 1.2;
-    margin-bottom: 1rem;
-  }
-
-  .gradient-text {
-    background: linear-gradient(135deg, #ff6b35, #ff3366, #8b5cf6);
-    background-size: 200% 200%;
+    background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: gradientShift 4s ease infinite;
+    transition: filter 0.3s;
   }
-
-  @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+  .mobile-menu a:hover { filter: drop-shadow(0 0 15px var(--neon-pink)); }
+  .mobile-lang {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 1rem;
   }
 
   /* ========== HERO ========== */
   #hero {
+    position: relative;
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    padding: 6rem 2rem 4rem;
     overflow: hidden;
+    z-index: 1;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 100%, rgba(131,56,236,0.25) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 20% 50%, rgba(255,0,110,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 80% 30%, rgba(0,245,255,0.1) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(131,56,236,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(131,56,236,0.08) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: grid-move 20s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes grid-move {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 60px; }
+  }
+
+  .scanline {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.05) 2px,
+      rgba(0,0,0,0.05) 4px
+    );
+    pointer-events: none;
+    z-index: 2;
   }
 
   .hero-content {
     position: relative;
-    z-index: 2;
-    max-width: 900px;
+    z-index: 3;
+    text-align: center;
+    padding: 0 20px;
+    animation: hero-appear 1.2s ease 2.5s both;
+  }
+  @keyframes hero-appear {
+    0% { opacity:0; transform: translateY(40px); }
+    100% { opacity:1; transform: translateY(0); }
   }
 
   .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1.5rem;
-    border: 1px solid rgba(255,107,53,0.3);
-    border-radius: 30px;
-    background: rgba(255,107,53,0.05);
-    backdrop-filter: blur(10px);
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--secondary);
-    margin-bottom: 2rem;
-    animation: badgeFloat 3s ease infinite;
-  }
-
-  @keyframes badgeFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
-  }
-
-  .badge-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: #00ff88;
-    box-shadow: 0 0 8px #00ff88;
-    animation: dotPulse 1.5s ease infinite;
-  }
-
-  @keyframes dotPulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(1.5); }
-  }
-
-  .hero-title {
-    font-family: 'Orbitron', monospace;
-    font-size: clamp(3rem, 10vw, 7rem);
-    font-weight: 900;
-    line-height: 1;
-    letter-spacing: -0.02em;
-    margin-bottom: 1.5rem;
-  }
-
-  .hero-title-line1 {
-    display: block;
-    background: linear-gradient(135deg, #ffffff, #a0a0a0);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: slideInLeft 1s ease both;
-    animation-delay: 0.3s;
-  }
-
-  .hero-title-line2 {
-    display: block;
-    background: linear-gradient(135deg, #ff6b35, #ff3366, #8b5cf6, #00d4ff);
-    background-size: 300% 300%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: slideInRight 1s ease both, gradientShift 4s ease infinite;
-    animation-delay: 0.5s;
-    filter: drop-shadow(0 0 30px rgba(255,107,53,0.5));
-  }
-
-  @keyframes slideInLeft {
-    from { opacity: 0; transform: translateX(-50px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-
-  @keyframes slideInRight {
-    from { opacity: 0; transform: translateX(50px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-
-  .hero-subtitle {
-    font-size: clamp(0.9rem, 2vw, 1.1rem);
-    color: var(--text-muted);
-    max-width: 600px;
-    margin: 0 auto 3rem;
-    line-height: 1.7;
-    animation: fadeInUp 1s ease both;
-    animation-delay: 0.7s;
-  }
-
-  .hero-buttons {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-    animation: fadeInUp 1s ease both;
-    animation-delay: 0.9s;
-  }
-
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .btn-primary {
-    padding: 0.9rem 2.5rem;
-    background: linear-gradient(135deg, #ff6b35, #ff3366);
-    color: #fff;
-    border: none;
-    border-radius: 50px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.3s ease;
+    display: inline-block;
+    padding: 6px 20px;
+    border: 1px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    border-radius: 2px;
+    animation: badge-glow 2s ease-in-out infinite;
     position: relative;
     overflow: hidden;
   }
-
-  .btn-primary::before {
+  .hero-badge::before {
     content: '';
     position: absolute;
-    top: 0; left: -100%;
-    width: 100%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s ease;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(0,245,255,0.1), transparent);
+    transform: translateX(-100%);
+    animation: shine 3s ease infinite;
+  }
+  @keyframes shine {
+    0% { transform: translateX(-100%); }
+    50%,100% { transform: translateX(100%); }
+  }
+  @keyframes badge-glow {
+    0%,100% { box-shadow: 0 0 10px rgba(0,245,255,0.3); }
+    50% { box-shadow: 0 0 25px rgba(0,245,255,0.6), inset 0 0 15px rgba(0,245,255,0.05); }
   }
 
-  .btn-primary:hover::before { left: 100%; }
-  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(255,107,53,0.4); }
+  .hero-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(3.5rem, 12vw, 9rem);
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    line-height: 0.9;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .hero-title-main {
+    display: block;
+    background: linear-gradient(135deg, #fff 0%, var(--neon-cyan) 50%, var(--neon-pink) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 30px rgba(0,245,255,0.4));
+    animation: title-flicker 8s ease-in-out infinite;
+  }
+  @keyframes title-flicker {
+    0%,95%,100% { filter: drop-shadow(0 0 30px rgba(0,245,255,0.4)); }
+    96% { filter: drop-shadow(0 0 5px rgba(0,245,255,0.2)); opacity:0.9; }
+    97% { filter: drop-shadow(0 0 60px rgba(0,245,255,0.8)); opacity:1; }
+  }
 
-  .btn-secondary {
-    padding: 0.9rem 2.5rem;
-    background: transparent;
-    color: var(--text);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 50px;
-    font-size: 0.9rem;
-    font-weight: 600;
+  .hero-subtitle {
+    font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+    font-weight: 300;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 50px;
+  }
+
+  .hero-subtitle span {
+    color: var(--neon-pink);
+    filter: drop-shadow(0 0 8px var(--neon-pink));
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    position: relative;
+    padding: 15px 45px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #000;
+    background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+    border: none;
+    border-radius: 3px;
     cursor: pointer;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 10px;
+    overflow: hidden;
     transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
+    box-shadow: 0 0 30px rgba(255,0,110,0.4);
   }
-
-  .btn-secondary:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-    transform: translateY(-3px);
-    box-shadow: 0 15px 40px rgba(255,107,53,0.2);
-  }
-
-  .hero-stats {
-    display: flex;
-    gap: 3rem;
-    justify-content: center;
-    margin-top: 4rem;
-    flex-wrap: wrap;
-    animation: fadeInUp 1s ease both;
-    animation-delay: 1.1s;
-  }
-
-  .hero-stat {
-    text-align: center;
-  }
-
-  .hero-stat-num {
-    font-family: 'Orbitron', monospace;
-    font-size: clamp(1.5rem, 3vw, 2.5rem);
-    font-weight: 900;
-    background: linear-gradient(135deg, #ff6b35, #ff3366);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .hero-stat-label {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-top: 0.3rem;
-  }
-
-  /* Hero scroll indicator */
-  .scroll-indicator {
+  .btn-primary::before {
+    content: '';
     position: absolute;
-    bottom: 2rem;
+    inset: 0;
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 40px rgba(255,0,110,0.6); }
+  .btn-primary:hover::before { opacity:1; }
+  .btn-primary span { position: relative; z-index: 1; }
+
+  .btn-outline {
+    padding: 14px 40px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--neon-cyan);
+    background: transparent;
+    border: 1px solid var(--neon-cyan);
+    border-radius: 3px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(0,245,255,0.2), inset 0 0 15px rgba(0,245,255,0.02);
+  }
+  .btn-outline:hover {
+    background: rgba(0,245,255,0.08);
+    box-shadow: 0 0 30px rgba(0,245,255,0.4), inset 0 0 20px rgba(0,245,255,0.05);
+    transform: translateY(-3px);
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
+    z-index: 3;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
-    animation: scrollBounce 2s ease infinite;
+    gap: 8px;
     opacity: 0.5;
+    animation: scroll-bounce 2s ease-in-out infinite;
   }
-
-  .scroll-indicator span {
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
+  .hero-scroll span {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
     text-transform: uppercase;
-    color: var(--text-muted);
+    color: var(--neon-cyan);
+  }
+  .scroll-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(180deg, var(--neon-cyan), transparent);
+    animation: scroll-line 2s ease-in-out infinite;
+  }
+  @keyframes scroll-bounce {
+    0%,100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+  @keyframes scroll-line {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
   }
 
-  .scroll-arrow {
-    width: 24px; height: 24px;
-    border-right: 2px solid var(--primary);
-    border-bottom: 2px solid var(--primary);
-    transform: rotate(45deg);
-  }
-
-  @keyframes scrollBounce {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(10px); }
-  }
-
-  /* Floating shapes */
-  .hero-shapes {
+  /* ========== FLOATING PARTICLES ========== */
+  .particles-hero {
     position: absolute;
     inset: 0;
     overflow: hidden;
     pointer-events: none;
+    z-index: 2;
   }
-
-  .shape {
+  .particle {
     position: absolute;
     border-radius: 50%;
-    filter: blur(60px);
-    animation: shapeFloat linear infinite;
+    pointer-events: none;
+    animation: particle-float linear infinite;
+    opacity: 0;
+  }
+  @keyframes particle-float {
+    0% { transform: translateY(100vh) rotate(0deg); opacity:0; }
+    5% { opacity:1; }
+    95% { opacity:1; }
+    100% { transform: translateY(-50px) rotate(720deg); opacity:0; }
   }
 
-  .shape-1 {
-    width: 300px; height: 300px;
-    background: radial-gradient(circle, rgba(255,107,53,0.15), transparent);
-    top: 10%; left: 10%;
-    animation-duration: 8s;
+  /* ========== SECTION COMMON ========== */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 120px 5%;
   }
 
-  .shape-2 {
-    width: 400px; height: 400px;
-    background: radial-gradient(circle, rgba(139,92,246,0.1), transparent);
-    top: 20%; right: 10%;
-    animation-duration: 10s;
-    animation-delay: -3s;
+  .section-header {
+    text-align: center;
+    margin-bottom: 80px;
   }
 
-  .shape-3 {
-    width: 250px; height: 250px;
-    background: radial-gradient(circle, rgba(0,212,255,0.1), transparent);
-    bottom: 20%; left: 30%;
-    animation-duration: 7s;
-    animation-delay: -5s;
+  .section-label {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--neon-pink);
+    margin-bottom: 15px;
+    position: relative;
+    padding: 0 20px;
+  }
+  .section-label::before,
+  .section-label::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40px;
+    height: 1px;
+    background: var(--neon-pink);
+  }
+  .section-label::before { right: 100%; margin-right: -15px; }
+  .section-label::after { left: 100%; margin-left: -15px; }
+
+  .section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.8rem, 5vw, 3.2rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+    margin-bottom: 20px;
   }
 
-  @keyframes shapeFloat {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(30px, -30px) scale(1.1); }
-    66% { transform: translate(-20px, 20px) scale(0.9); }
+  .section-desc {
+    font-size: clamp(0.95rem, 2vw, 1.15rem);
+    color: rgba(255,255,255,0.5);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  /* ========== STATS TICKER ========== */
+  .stats-ticker {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    padding: 25px 0;
+    background: linear-gradient(135deg, rgba(255,0,110,0.08), rgba(131,56,236,0.08));
+    border-top: 1px solid rgba(255,0,110,0.15);
+    border-bottom: 1px solid rgba(131,56,236,0.15);
+    margin-bottom: 0;
+  }
+  .ticker-track {
+    display: flex;
+    gap: 60px;
+    animation: ticker-scroll 25s linear infinite;
+    white-space: nowrap;
+    width: max-content;
+  }
+  .ticker-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+  }
+  .ticker-item strong {
+    background: linear-gradient(135deg, var(--neon-pink), var(--neon-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.1rem;
+  }
+  .ticker-dot {
+    width: 4px;
+    height: 4px;
+    background: var(--neon-pink);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--neon-pink);
+  }
+  @keyframes ticker-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
   }
 
   /* ========== ADVANTAGES ========== */
   #advantages {
-    padding: 7rem 0;
+    background: linear-gradient(180deg, var(--dark-bg) 0%, rgba(13,13,26,0.5) 100%);
   }
 
-  .advantages-header {
-    text-align: center;
-    margin-bottom: 4rem;
-  }
-
-  .advantages-grid {
+  .adv-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
+    gap: 1.5px;
+    background: linear-gradient(135deg, rgba(131,56,236,0.15), rgba(255,0,110,0.1));
+    border-radius: 16px;
+    overflow: hidden;
   }
 
   .adv-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 2rem;
+    background: var(--dark-card);
+    padding: 50px 40px;
     position: relative;
     overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: default;
+    transition: all 0.4s ease;
+    group: true;
   }
-
   .adv-card::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--primary), transparent);
-    transform: scaleX(0);
-    transition: transform 0.4s ease;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(131,56,236,0.06), rgba(255,0,110,0.04));
+    opacity: 0;
+    transition: opacity 0.4s;
   }
-
   .adv-card::after {
     content: '';
     position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,107,53,0.05), transparent 50%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple), var(--neon-cyan));
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+    box-shadow: 0 0 15px var(--neon-purple);
   }
+  .adv-card:hover { transform: translateY(-6px); }
+  .adv-card:hover::before { opacity:1; }
+  .adv-card:hover::after { transform: scaleX(1); }
+  .adv-card:hover .adv-icon { animation: icon-spin 0.6s ease; }
 
-  .adv-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    border-color: rgba(255,107,53,0.4);
-    box-shadow: 0 20px 60px rgba(255,107,53,0.15);
+  @keyframes icon-spin {
+    0% { transform: scale(1) rotate(0); }
+    50% { transform: scale(1.2) rotate(10deg); }
+    100% { transform: scale(1) rotate(0); }
   }
-
-  .adv-card:hover::before { transform: scaleX(1); }
-  .adv-card:hover::after { opacity: 1; }
 
   .adv-icon {
-    width: 60px; height: 60px;
-    border-radius: 12px;
+    font-size: 2.5rem;
+    margin-bottom: 24px;
+    display: block;
+    filter: drop-shadow(0 0 15px var(--neon-purple));
+  }
+
+  .adv-num {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3rem;
+    font-weight: 900;
+    color: rgba(255,255,255,0.03);
+    line-height: 1;
+  }
+
+  .adv-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #fff;
+    margin-bottom: 15px;
+  }
+
+  .adv-text {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* ========== SERVICES ========== */
+  #services {
+    background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(131,56,236,0.06) 0%, transparent 70%);
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+  }
+
+  .service-card {
+    position: relative;
+    background: var(--dark-card2);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .service-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    border-color: var(--neon-purple);
+    box-shadow:
+      0 20px 60px rgba(0,0,0,0.5),
+      0 0 40px rgba(131,56,236,0.2),
+      inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+
+  .service-img {
+    height: 220px;
+    position: relative;
+    overflow: hidden;
+  }
+  .service-img-bg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.8rem;
-    margin-bottom: 1.2rem;
+    font-size: 5rem;
+    transition: transform 0.6s ease;
+  }
+  .service-card:hover .service-img-bg { transform: scale(1.1); }
+
+  .service-img-overlay {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: #fff;
+    text-transform: uppercase;
+    transition: opacity 0.3s;
+    background: rgba(131,56,236,0.7);
+    backdrop-filter: blur(5px);
+  }
+  .service-card:hover .service-img-overlay { opacity:1; }
+
+  .service-body {
+    padding: 28px 30px 32px;
+  }
+  .service-tag {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 14px;
+  }
+  .service-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 12px;
+    letter-spacing: 0.05em;
+  }
+  .service-desc {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .service-arrow {
+    position: absolute;
+    bottom: 28px;
+    right: 28px;
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.3);
+    transition: all 0.3s;
+  }
+  .service-card:hover .service-arrow {
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+    box-shadow: 0 0 15px rgba(0,245,255,0.3);
+    transform: rotate(45deg);
+  }
+
+  /* ========== MENU/MENU SECTION ========== */
+  #menu {
+    background: linear-gradient(180deg, transparent, rgba(5,5,8,0.8));
+  }
+
+  .menu-tabs {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 50px;
+  }
+  .menu-tab {
+    padding: 10px 28px;
+    background: none;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.4);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.3s;
+  }
+  .menu-tab.active,
+  .menu-tab:hover {
+    background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(255,0,110,0.3);
+  }
+
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+  .menu-panel { display: none; }
+  .menu-panel.active { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+
+  .menu-card {
+    background: var(--dark-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 28px 24px;
     position: relative;
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: menu-appear 0.5s ease both;
+  }
+  @keyframes menu-appear {
+    from { opacity:0; transform: scale(0.9) translateY(20px); }
+    to { opacity:1; transform: scale(1) translateY(0); }
+  }
+  .menu-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(131,56,236,0.06), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .menu-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(131,56,236,0.4);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4), 0 0 30px rgba(131,56,236,0.15);
+  }
+  .menu-card:hover::before { opacity:1; }
+
+  .menu-emoji {
+    font-size: 2.2rem;
+    margin-bottom: 16px;
+    display: block;
+    filter: drop-shadow(0 0 10px rgba(255,214,10,0.4));
+    transition: transform 0.3s;
+  }
+  .menu-card:hover .menu-emoji { transform: scale(1.2) rotate(-5deg); }
+
+  .menu-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .menu-desc-text {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+  .menu-price {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--neon-gold), var(--neon-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ========== MAP SECTION ========== */
+  #map-section {
+    padding-bottom: 0;
+  }
+
+  .map-wrapper {
+    position: relative;
+    border-radius: 20px 20px 0 0;
+    overflow: hidden;
+    border: 1px solid var(--glass-border);
+    border-bottom: none;
+    box-shadow: 0 -20px 60px rgba(131,56,236,0.15);
+  }
+
+  .map-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px 20px 0 0;
+    background: linear-gradient(180deg, rgba(131,56,236,0.1) 0%, transparent 30%);
+    pointer-events: none;
     z-index: 1;
   }
 
-  .adv-icon-1 { background: linear-gradient(135deg, rgba(255,107,53,0.2), rgba(255,51,102,0.2)); }
-  .adv-icon-2 { background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(0,212,255,0.2)); }
-  .adv-icon-3 { background: linear-gradient(135deg, rgba(0,212,255,0.2), rgba(0,255,136,0.2)); }
-  .adv-icon-4 { background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,107,53,0.2)); }
-  .adv-icon-5 { background: linear-gradient(135deg, rgba(255,51,102,0.2), rgba(139,92,246,0.2)); }
-  .adv-icon-6 { background: linear-gradient(135deg, rgba(0,255,136,0.2), rgba(0,212,255,0.2)); }
+  .map-info-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 30px 40px;
+    background: var(--dark-card);
+    border: 1px solid var(--glass-border);
+    border-top: none;
+    border-radius: 0 0 20px 20px;
+    align-items: center;
+    justify-content: space-between;
+  }
 
-  .adv-title {
+  .map-info-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .map-info-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(131,56,236,0.2), rgba(255,0,110,0.1));
+    border: 1px solid rgba(131,56,236,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 1.1rem;
-    font-weight:
+    flex-shrink: 0;
+  }
+  .map-info-text span {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--neon-purple);
+    margin-bottom: 3px;
+  }
+  .map-info-text strong {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.8);
+  }
 
+  .map-iframe {
+    width: 100%;
+    height: 480px;
+    border: none;
+    display: block;
+    filter: invert(90%) hue-rotate(180deg) saturate(0.8) brightness(0.9);
+  }
+
+  /* ========== FOOTER ========== */
+  footer {
+    position: relative;
+    z-index: 1;
+    padding: 60px 5% 40px;
+    background: rgba(0,0,0,0.5);
+    border-top: 1px solid var(--glass-border);
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: 0.3em;
+    background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple), var(--neon-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 20px rgba(131,56,236,0.5));
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  .footer-tagline {
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+    margin-bottom: 40px;
+  }
+
+  .footer-socials {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+  .social-btn {
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .social-btn:hover {
+    border-color: var(--neon-pink);
+    color: var(--neon-pink);
+    box-shadow: 0 0 20px rgba(255,0,110,0.3);
+    transform: translateY(-3px);
+  }
+
+  .footer-copy {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.1em;
+  }
+
+  /* ========== SCROLL REVEAL ========== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-left {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal-left.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .reveal-right {
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .delay-1 { transition-delay: 0.1s; }
+  .delay-2 { transition-delay: 0.2s; }
+  .delay-3 { transition-delay: 0.3s; }
+  .delay-4 { transition-delay: 0.4s; }
+  .delay-5 { transition-delay: 0.5s; }
+  .delay-6 { transition-delay: 0.6s; }
+
+  /* ========== NEON DIVIDER ========== */
+  .neon-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--neon-purple), var(--neon-pink), var(--neon-purple), transparent);
+    position: relative;
+    overflow: visible;
+  }
+  .neon-divider::after {
+    content: '◆';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--neon-pink);
+    font-size: 0.6rem;
+    background: var(--dark-bg);
+    padding: 0 10px;
+    filter: drop-shadow(0 0 8px var(--neon-pink));
+  }
+
+  /* ========== CURSOR ========== */
+  .cursor {
+    width: 12px;
+    height: 12px;
+    background: var(--neon-cyan);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.05s, width 0.3s, height 0.3s, opacity 0.3s;
+    mix-blend-mode: screen;
+    box-shadow: 0 0 15px var(--neon-cyan);
+  }
+  .cursor-ring {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(0,245,255,0.4);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 99998;
+    transform: translate(-50%, -50%);
+    transition: all 0.12s ease;
+    mix-blend-mode: screen;
+  }
+
+  @media (max-width: 768px) {
+    .cursor, .cursor-ring { display: none; }
+  }
+
+  /* ========== RESPONSIVE ========== */
+  @media (max-width: 1024px) {
+    .nav-links { display: none; }
+    .burger { display: flex; }
+    .lang-switcher { display: none; }
+  }
+
+  @media (max-width: 768px) {
+    section { padding: 80px 5%; }
+    .adv-grid { grid-template-columns: 1fr; gap: 1px; }
+    .services-grid { grid-template-columns: 1fr; }
+    .map-info-bar { padding: 20px; gap: 15px; }
+    .map-iframe { height: 320px; }
+    .hero-cta { flex-direction: column; align-items: center; }
+    .btn-primary, .btn-outline { width: 100%; max-width: 300px; justify-content: center; }
+    .menu-tabs { gap: 6px; }
+    .menu-tab { padding: 8px 16px; font-size: 0.65rem; }
+  }
+
+  @media (max-width: 480px) {
+    nav { padding: 0 4%; }
+    .nav-logo { font-size: 1.3rem; }
+    .hero-subtitle { letter-spacing: 0.2em; }
+    .adv-card { padding: 35px 24px; }
+    .service-body { padding: 20px; }
+    .map-iframe { height: 260px; }
+  }
+
+  /* ========== AUDIO VISUALIZER DECO ========== */
+  .audio-bars {
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+    height: 30px;
+    margin: 0 auto 20px;
+    justify-content: center;
+  }
+  .audio-bar {
+    width: 3px;
+    background: linear-gradient(180deg, var(--neon-cyan), var(--neon-purple));
+    border-radius: 2px;
+    animation: audio-pulse linear infinite;
+    box-shadow: 0 0 6px var(--neon-cyan);
+  }
+  @keyframes audio-pulse {
+    0%, 100% { transform: scaleY(0.2); }
+    50% { transform: scaleY(1); }
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-particles" id="loaderParticles"></div>
+  <div class="loader-logo">TERMAX</div>
+  <div style="font-size:0.7rem;letter-spacing:0.4em;color:rgba(255,255,255,0.3);margin-top:14px;text-transform:uppercase;font-family:'Rajdhani',sans-serif;">Night Club Prague</div>
+  <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+</div>
+
+<!-- CANVAS BACKGROUND -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">TERMAX</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#hero" data-i18n="nav_home">Domů</a></li>
+    <li><a href="#advantages" data-i18n="nav_adv">Výhody</a></li>
+    <li><a href="#services" data-i18n="nav_services">Služby</a></li>
+    <li><a href="#menu" data-i18n="nav_menu">Menu</a></li>
+    <li><a href="#map-section" data-i18n="nav_contact">Kontakt</a></li>
+  </ul>
+  <div class="lang-switcher" id="langSwitcher">
+    <button class="lang-btn active" onclick="setLang('cs')">CS</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('de')">DE</button>
+    <button class="lang-btn" onclick="setLang('ru')">RU</button>
+  </div>
+  <div class="burger" id="burger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#hero" onclick="toggleMenu()" data-i18n="nav_home">Domů</a>
+  <a href="#advantages" onclick="toggleMenu()" data-i18n="nav_adv">Výhody</a>
+  <a href="#services" onclick="toggleMenu()" data-i18n="nav_services">Služby</a>
+  <a href="#menu" onclick="toggleMenu()" data-i18n="nav_menu">Menu</a>
+  <a href="#map-section" onclick="toggleMenu()" data-i18n="nav_contact">Kontakt</a>
+  <div class="mobile-lang">
+    <button class="lang-btn active" onclick="setLang('cs');toggleMenu()">CS</button>
+    <button class="lang-btn" onclick="setLang('en');toggleMenu()">EN</button>
+    <button class="lang-btn" onclick="setLang('de');toggleMenu()">DE</button>
+    <button class="lang-btn" onclick="setLang('ru');toggleMenu()">RU</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-grid"></div>
+  <div class="scanline"></div>
+  <div class="particles-hero" id="heroParticles"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge" data-i18n="hero_badge">Praha · Nočný klub · Premium</div>
+    <h1 class="hero-title">
+      <span class="hero-title-main">TERMAX</span>
+    </h1>
+    <p class="hero-subtitle" data-i18n="hero_sub">Night Club <span>◆</span> Prague</p>
+    <div class="audio-bars">
+      <div class="audio-bar" style="height:8px;animation-duration:0.6s;animation-delay:0s"></div>
+      <div class="audio-bar" style="height:20px;animation-duration:0.8s;animation-delay:0.1s"></div>
+      <div class="audio-bar" style="height:14px;animation-duration:0.5s;animation-delay:0.2s"></div>
+      <div class="audio-bar" style="height:24px;animation-duration:0.7s;animation-delay:0.05s"></div>
+      <div class="audio-bar" style="height:10px;animation-duration:0.9s;animation-delay:0.15s"></div>
+      <div class="audio-bar" style="height:28px;animation-duration:0.6s;animation-delay:0.3s"></div>
+      <div class="audio-bar" style="height:16px;animation-duration:0.75s;animation-delay:0.25s"></div>
+      <div class="audio-bar" style="height:22px;animation-duration:0.55s;animation-delay:0.35s"></div>
+      <div class="audio-bar" style="height:12px;animation-duration:0.85s;animation-delay:0.05s"></div>
+      <div class="audio-bar" style="height:18px;animation-duration:0.65s;animation-delay:0.2s"></div>
+      <div class="audio-bar" style="height:26px;animation-duration:0.7s;animation-delay:0.4s"></div>
+      <div class="audio-bar" style="height:8px;animation-duration:0.9s;animation-delay:0.1s"></div>
+    </div>
+    <div class="hero-cta">
+      <a href="#services" class="btn-primary"><span data-i18n="hero_cta1">Prozkoumat klub</span></a>
+      <a href="#map-section" class="btn-outline" data-i18n="hero_cta2">Jak se k nám dostat</a>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <span data-i18n="scroll">scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="stats-ticker">
+  <div class="ticker-track" id="tickerTrack">
+    <div class="ticker-item"><strong>TERMAX</strong><span data-i18n="t1">Night Club Prague</span></div>
+    <div class="ticker-dot"></div>
+    <div class="ticker-item">🎵 <span data-i18n="t2">Live DJ každý víkend</span></div>
+    <div class="ticker-dot"></div>
+    <div class="ticker-item">🍸 <span data-i18n="t3">Premium Bar</span></div>
+    <div class="ticker-dot"></div>
+    <div class="ticker-item">💃 <span data-i18n="t4">Taneční parket</span></div>
+    <div class="ticker-dot"></div>
+    <div class="ticker-item">🎉 <span data-i18n="t5">Soukromé akce</span></div>
+    <div class="ticker-dot"></div>
+    <div class="ticker-item">📍 Praha</div>
+    <div class="ticker-dot"></div>
+    <div class="ticker-item"><strong>TERMAX</strong><span data-i18n="t1">Night Club Prague</span></div>
+    <div class="ticker-dot"></div>
+    <div class="ticker-item">🎵 <span data-i18n="t2">Live DJ každý víkend</span></div>
+    <div class="ticker-dot"></div>
+    <div class="ticker-item">🍸 <span data-i18n="t3">Premium Bar</span></div>
+    <div class="ticker-dot"></div>
+    <div class="ticker-item">💃 <span data-i18n="t4">Taneční parket</span></div>
+    <div class="ticker-dot"></div>
+    <div class="ticker-item">🎉 <span data-i18n="t5">Soukromé akce</span></div>
+    <div class="ticker-dot"></div>
+    <div class="ticker-item">📍 Praha</div>
+    <div class="ticker-dot"></div>
+  </div>
+</div>
+
+<!-- ADVANTAGES -->
+<section id="advantages">
+  <div class="section-header reveal">
+    <div class="section-label" data-i18n="adv_label">Proč TERMAX</div>
+    <h2 class="section-title" data-i18n="adv_title">Zážitek na nejvyšší úrovni</h2>
+    <p class="section-desc" data-i18n="adv_desc">Jsme více než noční klub — jsme místo, kde se tvoří nezapomenutelné vzpomínky</p>
+  </div>
+  <div class="adv-grid">
+    <div class="adv-card reveal delay-1">
+      <span class="adv-icon">🎧</span>
+      <div class="adv-num">01</div>
+      <div class="adv-title" data-i18n="adv1_t">Světoví DJ</div>
+      <div class="adv-text" data-i18n="adv1_d">Každý víkend vystupují špičkové jména ze světové elektronické hudební scény. Deep house, techno, drum&bass.</div>
+    </div>
+    <div class="adv-card reveal delay-2">
+      <span class="adv-icon">✨</span>
+      <div class="adv-num">02</div>
+      <div class="adv-title" data-i18n="adv2_t">Profesionální osvětlení</div>
+      <div class="adv-text" data-i18n="adv2_d">Plně vybavená světelná show s laser efekty, LED stropy a immersive vizuálními projekcemi.</div>
+    </div>
+    <div class="adv-card reveal delay-3">
+      <span class="adv-icon">🍹</span>
+      <div class="adv-num">03</div>
+      <div class="adv-title" data-i18n="adv3_t">Premium bar</div>
+      <div class="adv-text" data-i18n="adv3_d">Originální koktejly, prémiové lihoviny a nápojový lístek sestavený zkušenými bartendery světové třídy.</div>
+    </div>
+    <div class="adv-card reveal delay-4">
+      <span class="adv-icon">🛋️</span>
+      <div class="adv-num">04</div>
+      <div class="adv-title" data-i18n="adv4_t">VIP zóny</div>
+      <div class="adv-text" data-i18n="adv4_d">Exkluzivní VIP sekce se soukromými stoly, rezervovaným servisem a výhledem na hlavní taneční parket.</div>
+    </div>
+    <div class="adv-card reveal delay-5">
+      <span class="adv-icon">🔒</span>
+      <div class="adv-num">05</div>
+      <div class="adv-title" data-i18n="adv5_t">Bezpečnost & komfort</div>
+      <div class="adv-text" data-i18n="adv5_d">Profesionální bezpečnostní tým a přívětivý personál zajišťují vaše pohodlí a bezpečí po celou noc.</div>
+    </div>
+    <div class="adv-card reveal delay-6">
+      <span class="adv-icon">🎊</span>
+      <div class="adv-num">06</div>
+      <div class="adv-title" data-i18n="adv6_t">Soukromé akce</div>
+      <div class="adv-text" data-i18n="adv6_d">Pronájem celého klubu nebo jeho částí pro firemní večírky, narozeniny, nebo jiné soukromé události.</div>
+    </div>
+  </div>
+</section>
+
+<div class="neon-divider"></div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-header reveal">
+    <div class="section-label" data-i18n="serv_label">Co nabízíme</div>
+    <h2 class="section-title" data-i18n="serv_title">Naše služby</h2>
+    <p class="section-desc" data-i18n="serv_desc">Každá noc v TERMAX je jiná — vyberte si svůj zážitek</p>
+  </div>
+  <div class="services-grid">
+
+    <div class="service-card reveal delay-1">
+      <div class="service-img">
+        <div class="service-img-bg" style="background:linear-gradient(135deg,#1a0030,#3d0080)">🎵</div>
+        <div class="service-img-overlay" data-i18n="serv_more">Více info →</div>
+      </div>
+      <div class="service-body">
+        <div class="service-tag" style="background:linear-gradient(135deg,rgba(131,56,236,0.2),rgba(255,0,110,0.1));color:var(--neon-purple);border:1px solid rgba(131,56,236,0.3);" data-i18n="s1_tag">Live Show</div>
+        <div class="service-title" data-i18n="s1_t">DJ Nights & Live Events</div>
+        <div class="service-desc" data-i18n="s1_d">Pátek a sobota — živá DJ show, světelná show, vizuální efekty. Vstup od 22:00 do 05:00.</div>
+      </div>
+      <div class="service-arrow">→</div>
+    </div>
+
+    <div class="service-card reveal delay-2">
+      <div class="service-img">
+        <div class="service-img-bg" style="background:linear-gradient(135deg,#001a30,#003d80)">🥂</div>
+        <div class="service-img-overlay" data-i18n="serv_more">Více info →</div>
+      </div>
+      <div class="service-body">
+        <div class="service-tag" style="background:linear-gradient(135deg,rgba(0,245,255,0.1),rgba(131,56,236,0.1));color:var(--neon-cyan);border:1px solid rgba(0,245,255,0.3);" data-i18n="s2_tag">VIP</div>
+        <div class="service-title" data-i18n="s2_t">VIP Table Service</div>
+        <div class="service-desc" data-i18n="s2_d">Rezervujte si svůj VIP stůl s personálním servisem, prémiovými nápoji a nejlepším výhledem na parket.</div>
+      </div>
+      <div class="service-arrow">→</div>
+    </div>
+
+    <div class="service-card reveal delay-3">
+      <div class="service-img">
+        <div class="service-img-bg" style="background:linear-gradient(135deg,#1a1500,#3d3000)">🎂</div>
+        <div class="service-img-overlay" data-i18n="serv_more">Více info →</div>
+      </div>
+      <div class="service-body">
+        <div class="service-tag" style="background:linear-gradient(135deg,rgba(255,214,10,0.1),rgba(255,0,110,0.1));color:var(--neon-gold);border:1px solid rgba(255,214,10,0.3);" data-i18n="s3_tag">Events</div>
+        <div class="service-title" data-i18n="s3_t">Soukromé oslavy</div>
+        <div class="service-desc" data-i18n="s3_d">Narozeniny, rozlučky, firemní večírky. Individuální přístup, vlastní playlist, personální servis.</div>
+      </div>
+      <div class="service-arrow">→</div>
+    </div>
+
+    <div class="service-card reveal delay-4">
+      <div class="service-img">
+        <div class="service-img-bg" style="background:linear-gradient(135deg,#001a10,#003d20)">🍸</div>
+        <div class="service-img-overlay" data-i18n="serv_more">Více info →</div>
+      </div>
+      <div class="service-body">
+        <div class="service-tag" style="background:linear-gradient(135deg,rgba(0,245,100,0.1),rgba(0,245,255,0.1));color:#00f564;border:1px solid rgba(0,245,100,0.3);" data-i18n="s4_tag">Bar</div>
+        <div class="service-title" data-i18n="s4_t">Premium Cocktail Bar</div>
+        <div class="service-desc" data-i18n="s4_d">Originální koktejly, craft spirits, šampaňské a výběr nejlepších alkoholických i nealkoholických nápojů.</div>
+      </div>
+      <div class="service-arrow">→</div>
+    </div>
+
+    <div class="service-card reveal delay-5">
+      <div class="service-img">
+        <div class="service-img-bg" style="background:linear-gradient(135deg,#200015,#500035)">💫</div>
+        <div class="service-img-overlay" data-i18n="serv_more">Více info →</div>
+      </div>
+      <div class="service-body">
+        <div class="service-tag" style="background:linear-gradient(135deg,rgba(255,0,110,0.15),rgba(131,56,236,0.1));color:var(--neon-pink);border:1px solid rgba(255,0,110,0.3);" data-i18n="s5_tag">Show</div>
+        <div class="service-title" data-i18n="s5_t">Light & Laser Show</div>
+        <div class="service-desc" data-i18n="s5_d">Špičkový zvukový a světelný systém, laser show a vizuální projekce pro maximální atmosféru.</div>
+      </div>
+      <div class="service-arrow">→</div>
+    </div>
+
+    <div class="service-card reveal delay-6">
+      <div class="service-img">
+        <div class="service-img-bg" style="background:linear-gradient(135deg,#001520,#002540)">🎤</div>
+        <div class="service-img-overlay" data-i18n="serv_more">Více info →</div>
+      </div>
+      <div class="service-body">
+        <div class="service-tag" style="background:linear-gradient(135deg,rgba(0,180,255,0.1),rgba(131,56,236,0.1));color:#00b4ff;border:1px solid rgba(0,180,255,0.3);" data-i18n="s6_tag">Booking</div>
+        <div class="service-title" data-i18n="s6_t">Artist Booking</div>
+        <div class="service-desc" data-i18n="s6_d">Organizace vystoupení umělců a DJs. Spolupracujeme s nejlepšími agenturami v Praze a celé Evropě.</div>
+      </div>
+      <div class="service-arrow">→</div>
+    </div>
+
+  </div>
+</section>
+
+<div class="neon-divider"></div>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="section-header reveal">
+    <div class="section-label" data-i18n="menu_label">Bar & Drinks</div>
+    <h2 class="section-title" data-i18n="menu_title">Nápojový lístek</h2>
+    <p class="section-desc" data-i18n="menu_desc">Prémiový výběr nápojů sestavený world-class bartendery</p>
+  </div>
+
+  <div class="menu-tabs" id="menuTabs">
+    <button class="menu-tab active" onclick="switchTab('cocktails')" data-i18n="tab1">🍸 Koktejly</button>
+    <button class="menu-tab" onclick="switchTab('shots')" data-i18n="tab2">🥃 Shots</button>
+    <button class="menu-tab" onclick="switchTab('premium')" data-i18n="tab3">🥂 Premium</button>
+    <button class="menu-tab" onclick="switchTab('nonalc')" data-i18n="tab4">🧃 Nealko</button>
+  </div>
+
+  <div id="cocktails" class="menu-panel active">
+    <div class="menu-card"><span class="menu-emoji">🌅</span><div class="menu-price">180 Kč</div><div class="menu-name">Neon Sunrise</div><div class="menu-desc-text" data-i18n="mc1">Vodka, pomerančový džus, grenadina — vibrantní noční klasika</div></div>
+    <div class="menu-card"><span class="menu-emoji">💜</span><div class="menu-price">200 Kč</div><div class="menu-name">Purple Haze</div><div class="menu-desc-text" data-i18n="mc2">Gin, fialová levandule, tonic, citrón — éterický zážitek</div></div>
+    <div class="menu-card"><span class="menu-emoji">🩵</span><div class="menu-price">195 Kč</div><div class="menu-name">Termax Blue</div><div class="menu-desc-text" data-i18n="mc3">Rum, blue curaçao, kokos, ananás — náš signature drink</div></div>
+    <div class="menu-card"><span class="menu-emoji">🔴</span><div class="menu-price">185 Kč</div><div class="menu-name">Red Laser</div><div class="menu-desc-text" data-i18n="mc4">Tequila, maliny, jalapeño, limeta — ostrý a svěží</div></div>
+    <div class="menu-card"><span class="menu-emoji">⚡</span><div class="menu-price">175 Kč</div><div class="menu-name">Electric Storm</div><div class="menu-desc-text" data-i18n="mc5">Bourbon, zázvor, citron, med — bouřka v každém doušku</div></div>
+    <div class="menu-card"><span class="menu-emoji">🌿</span><div class="menu-price">190 Kč</div><div class="menu-name">Midnight Garden</div><div class="menu-desc-text" data-i18n="mc6">Gin, bazalka, okurka, elderflower — svěžest pražské noci</div></div>
+    <div class="menu-card"><span class="menu-emoji">🔥</span><div class="menu-price">210 Kč</div><div class="menu-name">Fire & Ice</div><div class="menu-desc-text" data-i18n="mc7">Vodka, šampaňské, chilli, třešeň — neočekávané propojení</div></div>
+    <div class="menu-card"><span class="menu-emoji">🌙</span><div class="menu-price">170 Kč</div><div class="menu-name">Dark Moon</div><div class="menu-desc-text" data-i18n="mc8">Rum, Kahlúa, espresso, vanilka — noční energie</div></div>
+  </div>
+
+  <div id="shots" class="menu-panel">
+    <div class="menu-card"><span class="menu-emoji">💥</span><div class="menu-price">80 Kč</div><div class="menu-name">Bomb Shot</div><div class="menu-desc-text" data-i18n="ms1">Jäger + energy drink — klasický klub shot</div></div>
+    <div class="menu-card"><span class="menu-emoji">🟡</span><div class="menu-price">70 Kč</div><div class="menu-name">Lemon Drop</div><div class="menu-desc-text" data-i18n="ms2">Vodka, citron, cukr — jednoduchý a výbušný</div></div>
+    <div class="menu-card"><span class="menu-emoji">🔵</span><div class="menu-price">85 Kč</div><div class="menu-name">Blue Kamikaze</div><div class="menu-desc-text" data-i18n="ms3">Vodka, blue curaçao, limeta — neonový shot</div></div>
+    <div class="menu-card"><span class="menu-emoji">🖤</span><div class="menu-price">90 Kč</div><div class="menu-name">Black Death</div><div class="menu-desc-text" data-i18n="ms4">Absinthe, aktivní uhlí, anýz — pro odvážné</div></div>
+  </div>
+
+  <div id="premium" class="menu-panel">
+    <div class="menu-card"><span class="menu-emoji">🍾</span><div class="menu-price">od 2500 Kč</div><div class="menu-name">Moët & Chandon</div><div class="menu-desc-text" data-i18n="mp1">Prémiové šampaňské — ideální pro oslavy a VIP stoly</div></div>
+    <div class="menu-card"><span class="menu-emoji">🥃</span><div class="menu-price">od 350 Kč</div><div class="menu-name">Single Malt Whisky</div><div class="menu-desc-text" data-i18n="mp2">Výběr Scotch single malt — Glenfiddich, Macallan, Laphroaig</div></div>
+    <div class="menu-card"><span class="menu-emoji">🫙</span><div class="menu-price">od 280 Kč</div><div class="menu-name">Craft Gin Selection</div><div class="menu-desc-text" data-i18n="mp3">Prémiové craft giny z celé Evropy s tonikem Fever-Tree</div></div>
+    <div class="menu-card"><span class="menu-emoji">🧊</span><div class="menu-price">od 1800 Kč</div><div class="menu-name">Grey Goose Bottle</div><div class="menu-desc-text" data-i18n="mp4">Lahev Grey Goose s mixery a zdobením pro VIP servis</div></div>
+  </div>
+
+  <div id="nonalc" class="menu-panel">
+    <div class="menu-card"><span class="menu-emoji">🌊</span><div class="menu-price">90 Kč</div><div class="menu-name">Ocean Breeze</div><div class="menu-desc-text" data-i18n="mn1">Mango, marakuja, kokosová voda, citronela</div></div>
+    <div class="menu-card"><span class="menu-emoji">🌸</span><div class="menu-price">95 Kč</div><div class="menu-name">Berry Bliss</div><div class="menu-desc-text" data-i18n="mn2">Borůvky, maliny, mátový sirup, tonic</div></div>
+    <div class="menu-card"><span class="menu-emoji">🍋</span><div class="menu-price">85 Kč</div><div class="menu-name">Glow Lemonade</div><div class="menu-desc-text" data-i18n="mn3">Domácí limonáda s medem, zázvorem a mátou</div></div>
+    <div class="menu-card"><span class="menu-emoji">⚡</span><div class="menu-price">80 Kč</div><div class="menu-name">Energy Mix</div><div class="menu-desc-text" data-i18n="mn4">Red Bull mix — klassický nebo tropical</div></div>
+  </div>
+</section>
+
+<div class="neon-divider"></div>
+
+<!-- MAP SECTION -->
+<section id="map-section" style="padding-bottom:0;">
+  <div class="section-header reveal">
+    <div class="section-label" data-i18n="map_label">Kde nás najdete</div>
+    <h2 class="section-title" data-i18n="map_title">Jak se k nám dostat</h2>
+    <p class="section-desc" data-i18n="map_desc">Jsme v srdci Prahy — snadno dostupní MHD i autem</p>
+  </div>
+
+  <div class="map-wrapper reveal">
+    <iframe
+      class="map-iframe"
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2560.2!2d14.4397907!3d50.077134!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470b9485604fd1b5%3A0xc6ae9924318541bb!2sTERMAX!5e0!3m2!1scs!2scz!4v1700000000000!5m2!1scs!2scz"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      title="TERMAX Night Club Praha"
+    ></iframe>
+    <div class="map-info-bar">
+      <div class="map-info-item">
+        <div class="map-info-icon">📍</div>
+        <div class="map-info-text">
+          <span data-i18n="info_addr">Adresa</span>
+          <strong>Praha, Česká republika</strong>
+        </div>
+      </div>
+      <div class="map-info-item">
+        <div class="map-info-icon">🕙</div>
+        <div class="map-info-text">
+          <span data-i18n="info_hours">Otevírací doba</span>
+          <strong data-i18n="info_hours_v">Pá–So: 22:00 – 05:00</strong>
+        </div>
+      </div>
+      <div class="map-info-item">
+        <div class="map-info-icon">🚇</div>
+        <div class="map-info-text">
+          <span data-i18n="info_metro">Metro</span>
+          <strong data-i18n="info_metro_v">Dostupné MHD</strong>
+        </div>
+      </div>
+      <div class="map-info-item">
+        <div class="map-info-icon">📞</div>
+        <div class="map-info-text">
+          <span data-i18n="info_res">Rezervace</span>
+          <strong>info@termax.cz</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">TERMAX</span>
+  <div class="footer-tagline" data-i18n="footer_tag">Night Club · Prague · Est. 2024</div>
+  <div class="footer-socials">
+    <div class="social-btn" title="Instagram">📸</div>
+    <div class="social-btn" title="Facebook">📘</div>
+    <div class="social-btn" title="TikTok">🎵</div>
+    <div class="social-btn" title="Spotify">💚</div>
+    <div class="social-btn" title="Email">✉️</div>
+  </div>
+  <div class="footer-copy" data-i18n="footer_copy">© 2024 TERMAX Night Club Prague. Všechna práva vyhrazena.</div>
+</footer>
+
+<script>
+// ==================== TRANSLATIONS ====================
+const i18n = {
+  cs: {
+    nav_home:'Domů', nav_adv:'Výhody', nav_services:'Služby', nav_menu:'Menu', nav_contact:'Kontakt',
+    hero_badge:'Praha · Noční klub · Premium',
+    hero_sub:'Night Club ◆ Prague',
+    hero_cta1:'Prozkoumat klub', hero_cta2:'Jak se k nám dostat',
+    scroll:'scroll',
+    t1:'Noční klub Praha', t2:'Live DJ každý víkend', t3:'Premium Bar', t4:'Taneční parket', t5:'Soukromé akce',
+    adv_label:'Proč TERMAX', adv_title:'Zážitek na nejvyšší úrovni', adv_desc:'Jsme více než noční klub — jsme místo, kde se tvoří nezapomenutelné vzpomínky',
+    adv1_t:'Světoví DJ', adv1_d:'Každý víkend vystupují špičkové jména ze světové elektronické hudební scény. Deep house, techno, drum&bass.',
+    adv2_t:'Profesionální osvětlení', adv2_d:'Plně vybavená světelná show s laser efekty, LED stropy a immersive vizuálními projekcemi.',
+    adv3_t:'Premium bar', adv3_d:'Originální koktejly, prémiové lihoviny a nápojový lístek sestavený zkušenými bartendery světové třídy.',
+    adv4_t:'VIP zóny', adv4_d:'Exkluzivní VIP sekce se soukromými stoly, rezervovaným servisem a výhledem na hlavní taneční parket.',
+    adv5_t:'Bezpečnost & komfort', adv5_d:'Profesionální bezpečnostní tým a přívětivý personál zajišťují vaše pohodlí a bezpečí po celou noc.',
+    adv6_t:'Soukromé akce', adv6_d:'Pronájem celého klubu nebo jeho částí pro firemní večírky, narozeniny, nebo jiné soukromé události.',
+    serv_label:'Co nabízíme', serv_title:'Naše služby', serv_desc:'Každá noc v TERMAX je jiná — vyberte si svůj zážitek', serv_more:'Více info →',
+    s1_tag:'Live Show', s1_t:'DJ Nights & Live Events', s1_d:'Pátek a sobota — živá DJ show, světelná show, vizuální efekty. Vstup od 22:00 do 05:00.',
+    s2_tag:'VIP', s2_t:'VIP Table Service', s2_d:'Rezervujte si svůj VIP stůl s personálním servisem, prémiovými nápoji a nejlepším výhledem na parket.',
+    s3_tag:'Events', s3_t:'Soukromé oslavy', s3_d:'Narozeniny, rozlučky, firemní večírky. Individuální přístup, vlastní playlist, personální servis.',
+    s4_tag:'Bar', s4_t:'Premium Cocktail Bar', s4_d:'Originální koktejly, craft spirits, šampaňské a výběr nejlepších alkoholických i nealkoholických nápojů.',
+    s5_tag:'Show', s5_t:'Light & Laser Show', s5_d:'Špičkový zvukový a světelný systém, laser show a vizuální projekce pro maximální atmosféru.',
+    s6_tag:'Booking', s6_t:'Artist Booking', s6_d:'Organizace vystoupení umělců a DJs. Spolupracujeme s nejlepšími agenturami v Praze a celé Evropě.',
+    menu_label:'Bar & Drinks', menu_title:'Nápojový lístek', menu_desc:'Prémiový výběr nápojů sestavený world-class bartendery',
+    tab1:'🍸 Koktejly', tab2:'🥃 Shots', tab3:'🥂 Premium', tab4:'🧃 Nealko',
+    mc1:'Vodka, pomerančový džus, grenadina — vibrantní noční klasika',
+    mc2:'Gin, fialová levandule, tonic, citrón — éterický zážitek',
+    mc3:'Rum, blue curaçao, kokos, ananás — náš signature drink',
+    mc4:'Tequila, maliny, jalapeño, limeta — ostrý a svěží',
+    mc5:'Bourbon, zázvor, citron, med — bouřka v každém doušku',
+    mc6:'Gin, bazalka, okurka, elderflower — svěžest pražské noci',
+    mc7:'Vodka, šampaňské, chilli, třešeň — neočekávané propojení',
+    mc8:'Rum, Kahlúa, espresso, vanilka — noční energie',
+    ms1:'Jäger + energy drink — klasický klub shot',
+    ms2:'Vodka, citron, cukr — jednoduchý a výbušný',
+    ms3:'Vodka, blue curaçao, limeta — neonový shot',
+    ms4:'Absinthe, aktivní uhlí, anýz — pro odvážné',
+    mp1:'Prémiové šampaňské — ideální pro oslavy a VIP stoly',
+    mp2:'Výběr Scotch single malt — Glenfiddich, Macallan, Laphroaig',
+    mp3:'Prémiové craft giny z celé Evropy s tonikem Fever-Tree',
+    mp4:'Lahev Grey Goose s mixery a zdobením pro VIP servis',
+    mn1:'Mango, marakuja, kokosová voda, citronela',
+    mn2:'Borůvky, maliny, mátový sirup, tonic',
+    mn3:'Domácí limonáda s medem, zázvorem a mátou',
+    mn4:'Red Bull mix — klassický nebo tropical',
+    map_label:'Kde nás najdete', map_title:'Jak se k nám dostat', map_desc:'Jsme v srdci Prahy — snadno dostupní MHD i autem',
+    info_addr:'Adresa', info_hours:'Otevírací doba', info_hours_v:'Pá–So: 22:00 – 05:00',
+    info_metro:'Metro', info_metro_v:'Dostupné MHD', info_res:'Rezervace',
+    footer_tag:'Night Club · Praha · Est. 2024', footer_copy:'© 2024 TERMAX Night Club Praha. Všechna práva vyhrazena.'
+  },
+  en: {
+    nav_home:'Home', nav_adv:'Advantages', nav_services:'Services', nav_menu:'Menu', nav_contact:'Contact',
+    hero_badge:'Prague · Night Club · Premium',
+    hero_sub:'Night Club ◆ Prague',
+    hero_cta1:'Explore the club', hero_cta2:'How to get here',
+    scroll:'scroll',
+    t1:'Night Club Prague', t2:'Live DJ every weekend', t3:'Premium Bar', t4:'Dance floor', t5:'Private events',
+    adv_label:'Why TERMAX', adv_title:'A world-class experience', adv_desc:'We are more than a nightclub — we are the place where unforgettable memories are made',
+    adv1_t:'World-class DJs', adv1_d:'Every weekend features top names from the global electronic music scene. Deep house, techno, drum&bass.',
+    adv2_t:'Professional lighting', adv2_d:'Fully equipped light show with laser effects, LED ceilings and immersive visual projections.',
+    adv3_t:'Premium bar', adv3_d:'Original cocktails, premium spirits and a drink menu crafted by world-class bartenders.',
+    adv4_t:'VIP zones', adv4_d:'Exclusive VIP sections with private tables, reserved service and a view of the main dance floor.',
+    adv5_t:'Safety & comfort', adv5_d:'A professional security team and friendly staff ensure your comfort and safety throughout the night.',
+    adv6_t:'Private events', adv6_d:'Rent the entire club or part of it for corporate parties, birthdays or other private events.',
+    serv_label:'What we offer', serv_title:'Our services', serv_desc:'Every night at TERMAX is different — choose your experience', serv_more:'More info →',
+    s1_tag:'Live Show', s1_t:'DJ Nights & Live Events', s1_d:'Friday and Saturday — live DJ show, light show, visual effects. Entry from 10PM to 5AM.',
+    s2_tag:'VIP', s2_t:'VIP Table Service', s2_d:'Reserve your VIP table with personal service, premium drinks and the best view of the floor.',
+    s3_tag:'Events', s3_t:'Private Celebrations', s3_d:'Birthdays, hen parties, corporate events. Personal approach, custom playlist, dedicated service.',
+    s4_tag:'Bar', s4_t:'Premium Cocktail Bar', s4_d:'Original cocktails, craft spirits, champagne and the finest alcoholic and non-alcoholic drinks.',
+    s5_tag:'Show', s5_t:'Light & Laser Show', s5_d:'Top-tier sound and light system, laser show and visual projections for maximum atmosphere.',
+    s6_tag:'Booking', s6_t:'Artist Booking', s6_d:'Organizing artist and DJ performances. We work with the best agencies in Prague and across Europe.',
+    menu_label:'Bar & Drinks', menu_title:'Drink menu', menu_desc:'Premium drink selection crafted by world-class bartenders',
+    tab1:'🍸 Cocktails', tab2:'🥃 Shots', tab3:'🥂 Premium', tab4:'🧃 Non-Alc',
+    mc1:'Vodka, orange juice, grenadine — vibrant night classic',
+    mc2:'Gin, purple lavender, tonic, lemon — ethereal experience',
+    mc3:'Rum, blue curaçao, coconut, pineapple — our signature drink',
+    mc4:'Tequila, raspberries, jalapeño, lime — sharp and fresh',
+    mc5:'Bourbon, ginger, lemon, honey — storm in every sip',
+    mc6:'Gin, basil, cucumber, elderflower — freshness of Prague nights',
+    mc7:'Vodka, champagne, chilli, cherry — unexpected combination',
+    mc8:'Rum, Kahlúa, espresso, vanilla — night energy',
+    ms1:'Jäger + energy drink — classic club shot',
+    ms2:'Vodka, lemon, sugar — simple and explosive',
+    ms3:'Vodka, blue curaçao, lime — neon shot',
+    ms4:'Absinthe, activated charcoal, anise — for the brave',
+    mp1:'Premium champagne — ideal for celebrations and VIP tables',
+    mp2:'Scotch single malt selection — Glenfiddich, Macallan, Laphroaig',
+    mp3:'Premium craft gins from across Europe with Fever-Tree tonic',
+    mp4:'Grey Goose bottle with mixers and garnish for VIP service',
+    mn1:'Mango, passion fruit, coconut water, lemongrass',
+    mn2:'Blueberries, raspberries, mint syrup, tonic',
+    mn3:'Homemade lemonade with honey, ginger and mint',
+    mn4:'Red Bull mix — classic or tropical',
+    map_label:'Find us', map_title:'How to get here', map_desc:'We are in the heart of Prague — easily accessible by public transport and car',
+    info_addr:'Address', info_hours:'Opening hours', info_hours_v:'Fri–Sat: 10PM – 5AM',
+    info_metro:'Metro', info_metro_v:'Public transport available', info_res:'Reservations',
+    footer_tag:'Night Club · Prague · Est. 2024', footer_copy:'© 2024 TERMAX Night Club Prague. All rights reserved.'
+  },
+  de: {
+    nav_home:'Startseite', nav_adv:'Vorteile', nav_services:'Services', nav_menu:'Speisekarte', nav_contact:'Kontakt',
+    hero_badge:'Prag · Nachtclub · Premium',
+    hero_sub:'Night Club ◆ Prag',
+    hero_cta1:'Club erkunden', hero_cta2:'Anfahrt',
+    scroll:'scrollen',
+    t1:'Nachtclub Prag', t2:'Live DJ jedes Wochenende', t3:'Premium Bar', t4:'Tanzfläche', t5:'Private Events',
+    adv_label:'Warum TERMAX', adv_title:'Erstklassiges Erlebnis', adv_desc:'Wir sind mehr als ein Nachtclub — wir sind der Ort, an dem unvergessliche Erinnerungen entstehen',
+    adv1_t:'Weltklasse DJs', adv1_d:'Jedes Wochenende treten Topnamen der globalen Elektroszene auf. Deep House, Techno, Drum&Bass.',
+    adv2_t:'Professionelles Licht', adv2_d:'Vollausgestattete Lichtshow mit Lasereffekten, LED-Decken und immersiven visuellen Projektionen.',
+    adv3_t:'Premium Bar', adv3_d:'Originelle Cocktails, Premium-Spirituosen und eine Getränkekarte von Weltklasse-Bartendern.',
+    adv4_t:'VIP-Zonen', adv4_d:'Exklusive VIP-Bereiche mit privaten Tischen, Reservierungsservice und Blick auf die Haupttanzfläche.',
+    adv5_t:'Sicherheit & Komfort', adv5_d:'Ein professionelles Sicherheitsteam und freundliches Personal sorgen für Ihr Wohlbefinden die ganze Nacht.',
+    adv6_t:'Private Veranstaltungen', adv6_d:'Mieten Sie den gesamten Club oder Teile davon für Firmenfeiern, Geburtstage oder andere private Events.',
+    serv_label:'Was wir bieten', serv_title:'Unsere Services', serv_desc:'Jede Nacht im TERMAX ist anders — wählen Sie Ihr Erlebnis', serv_more:'Mehr Info →',
+    s1_tag:'Live Show', s1_t:'DJ Nights & Live Events', s1_d:'Freitag und Samstag — Live DJ Show, Lichtshow, visuelle Effekte. Einlass ab 22:00 bis 05:00.',
+    s2_tag:'VIP', s2_t:'VIP Table Service', s2_d:'Reservieren Sie Ihren VIP-Tisch mit persönlichem Service, Premium-Drinks und bestem Blick.',
+    s3_tag:'Events', s3_t:'Private Feiern', s3_d:'Geburtstage, Junggesellenabschiede, Firmenfeiern. Persönliche Betreuung, eigene Playlist.',
+    s4_tag:'Bar', s4_t:'Premium Cocktail Bar', s4_d:'Originelle Cocktails, Craft Spirits, Champagner und feinste alkoholische und alkoholfreie Getränke.',
+    s5_tag:'Show', s5_t:'Licht & Laser Show', s5_d:'Erstklassiges Sound- und Lichtsystem, Lasershow und visuelle Projektionen für maximale Atmosphäre.',
+    s6_tag:'Booking', s6_t:'Artist Booking', s6_d:'Organisation von Künstler- und DJ-Auftritten. Wir arbeiten mit den besten Agenturen in Prag und Europa.',
+    menu_label:'Bar & Drinks', menu_title:'Getränkekarte', menu_desc:'Premium-Getränkeauswahl von Weltklasse-Bartendern',
+    tab1:'🍸 Cocktails', tab2:'🥃 Shots', tab3:'🥂 Premium', tab4:'🧃 Alkoholfrei',
+    mc1:'Wodka, Orangensaft, Grenadine — vibrierende Nachtklassik',
+    mc2:'Gin, Lavendel, Tonic, Zitrone — ätherisches Erlebnis',
+    mc3:'Rum, Blue Curaçao, Kokos, Ananas — unser Signature Drink',
+    mc4:'Tequila, Himbeeren, Jalapeño, Limette — scharf und frisch',
+    mc5:'Bourbon, Ingwer, Zitrone, Honig — Sturm in jedem Schluck',
+    mc6:'Gin, Basilikum, Gurke, Holunderblüte — Prager Nachtfrische',
+    mc7:'Wodka, Champagner, Chili, Kirsche — unerwartete Kombination',
+    mc8:'Rum, Kahlúa, Espresso, Vanille — Nachtenergie',
+    ms1:'Jäger + Energy Drink — klassischer Club-Shot',
+    ms2:'Wodka, Zitrone, Zucker — einfach und explosiv',
+    ms3:'Wodka, Blue Curaçao, Limette — Neon-Shot',
+    ms4:'Absinth, Aktivkohle, Anis — für Mutige',
+    mp1:'Premium Champagner — ideal für Feiern und VIP-Tische',
+    mp2:'Scotch Single Malt Auswahl — Glenfiddich, Macallan, Laphroaig',
+    mp3:'Premium Craft Gins aus ganz Europa mit Fever-Tree Tonic',
+    mp4:'Grey Goose Flasche mit Mixern und Garnish für VIP-Service',
+    mn1:'Mango, Maracuja, Kokoswasser, Zitronengras',
+    mn2:'Blaubeeren, Himbeeren, Minzsirup, Tonic',
+    mn3:'Hausgemachte Limonade mit Honig, Ingwer und Minze',
+    mn4:'Red Bull Mix — klassisch oder tropical',
+    map_label:'Wo wir sind', map_title:'Anfahrt', map_desc:'Wir befinden uns im Herzen von Prag — gut erreichbar mit ÖPNV und Auto',
+    info_addr:'Adresse', info_hours:'Öffnungszeiten', info_hours_v:'Fr–Sa: 22:00 – 05:00',
+    info_metro:'U-Bahn', info_metro_v:'ÖPNV verfügbar', info_res:'Reservierungen',
+    footer_tag:'Night Club · Prag · Est. 2024', footer_copy:'© 2024 TERMAX Night Club Prag. Alle Rechte vorbehalten.'
+  },
+  ru: {
+    nav_home:'Главная', nav_adv:'Преимущества', nav_services:'Услуги', nav_menu:'Меню', nav_contact:'Контакты',
+    hero_badge:'Прага · Ночной клуб · Premium',
+    hero_sub:'Night Club ◆ Прага',
+    hero_cta1:'Исследовать клуб', hero_cta2:'Как добраться',
+    scroll:'вниз',
+    t1:'Ночной клуб Прага', t2:'Live DJ каждые выходные', t3:'Премиум бар', t4:'Танцпол', t5:'Частные мероприятия',
+    adv_label:'Почему TERMAX', adv_title:'Опыт мирового класса', adv_desc:'Мы — больше чем ночной клуб. Это место, где создаются незабываемые воспоминания',
+    adv1_t:'Мировые DJ', adv1_d:'Каждые выходные — выступления топовых имён мировой электронной сцены. Deep house, techno, drum&bass.',
+    adv2_t:'Профессиональный свет', adv2_d:'Полноценное световое шоу с лазерными эффектами, LED-потолками и иммерсивными проекциями.',
+    adv3_t:'Премиум бар', adv3_d:'Авторские коктейли, премиальный алкоголь и карта напитков от барменов мирового класса.',
+    adv4_t:'VIP-зоны', adv4_d:'Эксклюзивные VIP-секции с приватными столами, персональным обслуживанием и видом на танцпол.',
+    adv5_t:'Безопасность и комфорт', adv5_d:'Профессиональная охрана и приветливый персонал обеспечат ваш комфорт и безопасность всю ночь.',
+    adv6_t:'Частные мероприятия', adv6_d:'Аренда всего клуба или его части для корпоративных вечеринок, дней рождения и других событий.',
+    serv_label:'Что мы предлагаем', serv_title:'Наши услуги', serv_desc:'Каждая ночь в TERMAX — особенная. Выберите свой опыт', serv_more:'Подробнее →',
+    s1_tag:'Live Show', s1_t:'DJ Nights & Live Events', s1_d:'Пятница и суббота — живое DJ-шоу, световое шоу, визуальные эффекты. Вход с 22:00 до 05:00.',
+    s2_tag:'VIP', s2_t:'VIP Table Service', s2_d:'Забронируйте VIP-стол с персональным обслуживанием, премиальными напитками и лучшим видом.',
+    s3_tag:'Events', s3_t:'Частные праздники', s3_d:'Дни рождения, мальчишники/девичники, корпоративы. Индивидуальный подход, свой плейлист.',
+    s4_tag:'Bar', s4_t:'Premium Cocktail Bar', s4_d:'Авторские коктейли, craft spirits, шампанское и лучший выбор алкогольных и безалкогольных напитков.',
+    s5_tag:'Show', s5_t:'Light & Laser Show', s5_d:'Топовая звуко-световая система, лазер-шоу и визуальные проекции для максимальной атмосферы.',
+    s6_tag:'Booking', s6_t:'Artist Booking', s6_d:'Организация выступлений артистов и DJ. Работаем с лучшими агентствами Праги и всей Европы.',
+    menu_label:'Bar & Drinks', menu_title:'Карта напитков', menu_desc:'Премиальный выбор напитков от барменов мирового класса',
+    tab1:'🍸 Коктейли', tab2:'🥃 Шоты', tab3:'🥂 Премиум', tab4:'🧃 Безалко',
+    mc1:'Водка, апельсиновый сок, гренадин — ночная классика',
+    mc2:'Джин, лаванда, тоник, лимон — эфирный опыт',
+    mc3:'Ром, голубой кюрасао, кокос, ананас — наш фирменный напиток',
+    mc4:'Текила, малина, халапеньо, лайм — острый и свежий',
+    mc5:'Бурбон, имбирь, лимон, мёд — шторм в каждом глотке',
+    mc6:'Джин, базилик, огурец, бузина — свежесть пражской ночи',
+    mc7:'Водка, шампанское, чили, вишня — неожиданное сочетание',
+    mc8:'Ром, Kahlúa, эспрессо, ваниль — ночная энергия',
+    ms1:'Jäger + энергетик — классический клубный шот',
+    ms2:'Водка, лимон, сахар — просто и взрывно',
+    ms3:'Водка, голубой кюрасао, лайм — неоновый шот',
+    ms4:'Абсент, активированный уголь, анис — для смелых',
+    mp1:'Премиальное шампанское — идеально для праздников и VIP-столов',
+    mp2:'Выбор Scotch Single Malt — Glenfiddich, Macallan, Laphroaig',
+    mp3:'Премиальные крафтовые джины из Европы с тоником Fever-Tree',
+    mp4:'Бутылка Grey Goose с миксерами и гарниром для VIP-сервиса',
+    mn1:'Манго, маракуйя, кокосовая вода, лемонграсс',
+    mn2:'Черника, малина, мятный сироп, тоник',
+    mn3:'Домашний лимонад с мёдом, имбирём и мятой',
+    mn4:'Микс Red Bull — классический или тропический',
+    map_label:'Где мы находимся', map_title:'Как добраться', map_desc:'Мы в центре Праги — легко добраться на общественном транспорте и на машине',
+    info_addr:'Адрес', info_hours:'Часы работы', info_hours_v:'Пт–Сб: 22:00 – 05:00',
+    info_metro:'Метро', info_metro_v:'Доступно на общ. транспорте', info_res:'Бронирование',
+    footer_tag:'Night Club · Прага · Est. 2024', footer_copy:'© 2024 TERMAX Night Club Praha. Все права защищены.'
+  }
+};
+
+let currentLang = 'cs';
+
+function setLang(lang) {
+  currentLang = lang;
+  const t = i18n[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) el.textContent = t[key];
+  });
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.trim().toLowerCase() === lang);
+  });
+}
+
+// ==================== LOADER ====================
+const loaderParticles = document.getElementById('loaderParticles');
+for(let i=0;i<40;i++){
+  const p = document.createElement('div');
+  p.className = 'lp';
+  p.style.cssText = `left:${Math.random()*100}%;width:${Math.random()*3+1}px;height:${Math.random()*3+1}px;background:hsl(${Math.random()*60+160},100%,60%);animation-duration:${Math.random()*5+4}s;animation-delay:${Math.random()*3}s;`;
+  loaderParticles.appendChild(p);
+}
+
+setTimeout(() => {
+  const loader = document.getElementById('loader');
+  loader.classList.add('hide');
+  setTimeout(() => loader.remove(), 900);
+}, 2600);
+
+// ==================== HERO PARTICLES ====================
+const heroParticles = document.getElementById('heroParticles');
+const colors = ['#ff006e','#8338ec','#00f5ff','#ffd60a','#ff6b9d'];
+for(let i=0;i<35;i++){
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const size = Math.random()*4+1;
+  p.style.cssText = `
+    left:${Math.random()*100}%;
+    width:${size}px;height:${size}px;
+    background:${colors[Math.floor(Math.random()*colors.length)]};
+    animation-duration:${Math.random()*12+8}s;
+    animation-delay:${Math.random()*8}s;
+    box-shadow:0 0 ${size*3}px currentColor;
+  `;
+  heroParticles.appendChild(p);
+}
+
+// ==================== CANVAS BACKGROUND ====================
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, dots = [];
+
+function resizeCanvas() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+class Dot {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.vx = (Math.random() - 0.5) * 0.4;
+    this.vy = (Math.random() - 0.5) * 0.4;
+    this.r = Math.random() * 1.5 + 0.5;
+    this.color = colors[Math.floor(Math.random() * colors.length)];
+    this.alpha = Math.random() * 0.4 + 0.1;
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    if(this.x<0||this.x>W||this.y<0||this.y>H) this.reset();
+  }
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = this.alpha;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = this.color;
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+for(let i=0;i<80;i++) dots.push(new Dot());
+
+function animCanvas() {
+  ctx.clearRect(0, 0, W, H);
+  dots.forEach(d => { d.update(); d.draw(); });
+  // Draw connections
+  for(let i=0;i<dots.length;i++){
+    for(let j=i+1;j<dots.length;j++){
+      const dx = dots[i].x - dots[j].x;
+      const dy = dots[i].y - dots[j].y;
+      const dist = Math.sqrt(dx*dx+dy*dy);
+      if(dist < 120){
+        ctx.save();
+        ctx.globalAlpha = (1 - dist/120) * 0.06;
+        ctx.strokeStyle = '#8338ec';
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(dots[i].x, dots[i].y);
+        ctx.lineTo(dots[j].x, dots[j].y);
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+  }
+  requestAnimationFrame(animCanvas);
+}
+animCanvas();
+
+// ==================== NAVBAR SCROLL ====================
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// ==================== BURGER MENU ====================
+function toggleMenu() {
+  const menu = document.getElementById('mobileMenu');
+  const burger = document.getElementById('burger');
+  menu.classList.toggle('open');
+  burger.classList.toggle('active');
+  const spans = burger.querySelectorAll('span');
+  if(burger.classList.contains('active')){
+    spans[0].style.transform = 'translateY(7px) rotate(45deg)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'translateY(-7px) rotate(-45deg)';
+  } else {
+    spans[0].style.transform = '';
+    spans[1].style.opacity = '';
+    spans[2].style.transform = '';
+  }
+}
+
+// ==================== MENU TABS ====================
+function switchTab(id) {
+  document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  // Re-trigger animation
+  document.querySelectorAll('#'+id+' .menu-card').forEach((c,i) => {
+    c.style.animation = 'none';
+    c.offsetHeight;
+    c.style.animation = `menu-appear 0.4s ease ${i*0.06}s both`;
+  });
+}
+
+// ==================== SCROLL REVEAL ====================
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revealObserver.observe(el));
+
+// ==================== CUSTOM CURSOR ====================
+const cursor = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX;
+  my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+});
+
+function animCursor() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  cursorRing.style.left = rx + 'px';
+  cursorRing.style.top = ry + 'px';
+  requestAnimationFrame(animCursor);
+}
+animCursor();
+
+document.querySelectorAll('a, button, .adv-card, .service-card, .menu-card, .social-btn').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width = '6px';
+    cursor.style.height = '6px';
+    cursorRing.style.width = '60px';
+    cursorRing.style.height = '60px';
+    cursorRing.style.borderColor = 'rgba(255,0,110,0.6)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width = '12px';
+    cursor.style.height = '12px';
+    cursorRing.style.width = '40px';
+    cursorRing.style.height = '40px';
+    cursorRing.style.borderColor = 'rgba(0,245,255,0.4)';
+  });
+});
+</script>
+</body>
+</html>
